@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文档中心 - TokenHub</title>
+    <meta name="description" content="TokenHub API 文档中心，提供详细的接入指南、SDK 示例和常见问题解答">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/assets/images/logo.svg">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/docs.css">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="docs-page">
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="/" class="logo">
+                <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#logo-gradient)"/>
+                    <path d="M20 10L28 24H12L20 10Z" fill="white"/>
+                    <circle cx="20" cy="26" r="4" fill="white" fill-opacity="0.8"/>
+                    <defs>
+                        <linearGradient id="logo-gradient" x1="0" y1="0" x2="40" y2="40">
+                            <stop offset="0%" stop-color="#667EEA"/>
+                            <stop offset="100%" stop-color="#764BA2"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span class="logo-text">TokenHub</span>
+            </a>
+            
+            <div class="nav-links" id="navLinks">
+                <a href="/" class="nav-link">首页</a>
+                <a href="/#features" class="nav-link">功能特点</a>
+                <a href="/#pricing" class="nav-link">价格方案</a>
+                <a href="/docs" class="nav-link btn-primary">文档中心</a>
+            </div>
+            
+            <button class="nav-toggle" id="navToggle" aria-label="切换菜单">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="docs-container">
+        <!-- Sidebar -->
+        <aside class="docs-sidebar">
+            <nav class="docs-nav">
+                <div class="docs-nav-title">快速开始</div>
+                <ul class="docs-menu">
+                    <li><a href="#introduction" class="docs-menu-item active"><span class="docs-menu-icon">📖</span> 简介</a></li>
+                    <li><a href="#quickstart" class="docs-menu-item"><span class="docs-menu-icon">🚀</span> 快速入门</a></li>
+                    <li><a href="#authentication" class="docs-menu-item"><span class="docs-menu-icon">🔐</span> 认证方式</a></li>
+                </ul>
+                
+                <div class="docs-nav-title" style="margin-top: 1.5rem;">API 参考</div>
+                <ul class="docs-menu">
+                    <li><a href="#chat-completions" class="docs-menu-item"><span class="docs-menu-icon">💬</span> 对话补全</a></li>
+                    <li><a href="#models" class="docs-menu-item"><span class="docs-menu-icon">🤖</span> 模型列表</a></li>
+                    <li><a href="#usage" class="docs-menu-item"><span class="docs-menu-icon">📊</span> 用量查询</a></li>
+                    <li><a href="#balance" class="docs-menu-item"><span class="docs-menu-icon">💰</span> 余额查询</a></li>
+                </ul>
+                
+                <div class="docs-nav-title" style="margin-top: 1.5rem;">SDK 示例</div>
+                <ul class="docs-menu">
+                    <li><a href="#python-sdk" class="docs-menu-item"><span class="docs-menu-icon">🐍</span> Python</a></li>
+                    <li><a href="#nodejs-sdk" class="docs-menu-item"><span class="docs-menu-icon">🟩</span> Node.js</a></li>
+                    <li><a href="#java-sdk" class="docs-menu-item"><span class="docs-menu-icon">☕</span> Java</a></li>
+                    <li><a href="#curl-sdk" class="docs-menu-item"><span class="docs-menu-icon">🌐</span> cURL</a></li>
+                </ul>
+                
+                <div class="docs-nav-title" style="margin-top: 1.5rem;">常见问题</div>
+                <ul class="docs-menu">
+                    <li><a href="#faq-general" class="docs-menu-item"><span class="docs-menu-icon">❓</span> 一般问题</a></li>
+                    <li><a href="#faq-billing" class="docs-menu-item"><span class="docs-menu-icon">💳</span> 计费问题</a></li>
+                    <li><a href="#faq-errors" class="docs-menu-item"><span class="docs-menu-icon">⚠️</span> 错误处理</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Content -->
+        <article class="docs-content">
+            <div class="breadcrumb">
+                <a href="/">首页</a>
+                <span class="breadcrumb-separator">/</span>
+                <span class="breadcrumb-current">文档中心</span>
+            </div>
+
+            <header class="docs-header" id="introduction">
+                <h1 class="docs-title">欢迎使用 TokenHub API</h1>
+                <p class="docs-description">
+                    TokenHub 提供兼容 OpenAI 格式的 API 接口，让您能够轻松接入全球主流 AI 大模型。
+                    只需修改 API Base URL 和 API Key，即可在几分钟内完成集成。
+                </p>
+            </header>
+
+            <!-- Quick Start -->
+            <section class="docs-section" id="quickstart">
+                <h2 class="docs-section-title">快速入门</h2>
+                <div class="docs-text">
+                    <p>按照以下步骤，快速开始使用 TokenHub API：</p>
+                    
+                    <ol>
+                        <li><strong>注册账号</strong>：访问 <a href="/register">tokenhub.com/register</a> 注册账号</li>
+                        <li><strong>获取 API Key</strong>：登录后在控制台创建 API Key</li>
+                        <li><strong>配置 SDK</strong>：设置 API Base URL 和 API Key</li>
+                        <li><strong>发起请求</strong>：调用 API 测试功能</li>
+                    </ol>
+                </div>
+
+                <div class="info-box success">
+                    <div class="info-box-title">✅ 新用户福利</div>
+                    <p>注册即送 ¥10 体验金，无需充值即可体验所有模型！</p>
+                </div>
+
+                <div class="docs-code">
+                    <div class="docs-code-header">
+                        <span class="docs-code-title">Python 示例</span>
+                        <button class="copy-btn" onclick="copyCode(this)">
+                            <span>📋</span> 复制
+                        </button>
+                    </div>
+                    <pre><code><span class="keyword">import</span> openai
+
+<span class="comment"># 配置 TokenHub API</span>
+openai.api_base = <span class="string">"https://api.tokenhub.com/v1"</span>
+openai.api_key = <span class="string">"sk-your-api-key"</span>
+
+<span class="comment"># 调用 GPT-4</span>
+response = openai.ChatCompletion.create(
+    model=<span class="string">"gpt-4"</span>,
+    messages=[{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: <span class="string">"Hello!"</span>]
+)
+
+<span class="keyword">print</span>(response.choices[<span class="number">0</span>].message.content)</code></pre>
+                </div>
+            </section>
+
+            <!-- Authentication -->
+            <section class="docs-section" id="authentication">
+                <h2 class="docs-section-title">认证方式</h2>
+                <div class="docs-text">
+                    <p>TokenHub API 使用 Bearer Token 进行认证。您需要将 API Key 添加到 HTTP 请求的 Authorization 头中。</p>
+                </div>
+
+                <div class="docs-code">
+                    <div class="docs-code-header">
+                        <span class="docs-code-title">Authorization Header</span>
+                        <button class="copy-btn" onclick="copyCode(this)">
+                            <span>📋</span> 复制
+                        </button>
+                    </div>
+                    <pre><code>Authorization: Bearer sk-your-api-key</code></pre>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">⚠️ 安全提示</div>
+                    <p>请妥善保管您的 API Key，不要将其泄露给他人或提交到代码仓库。建议通过环境变量管理 API Key。</p>
+                </div>
+            </section>
+
+            <!-- Chat Completions -->
+            <section class="docs-section" id="chat-completions">
+                <h2 class="docs-section-title">对话补全 API</h2>
+                <div class="docs-text">
+                    <p>使用聊天补全 API 与 AI 模型进行对话。支持多轮对话、系统消息设定等功能。</p>
+                </div>
+
+                <table class="docs-table">
+                    <thead>
+                        <tr>
+                            <th>参数</th>
+                            <th>类型</th>
+                            <th>必填</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>model</code></td>
+                            <td>string</td>
+                            <td>是</td>
+                            <td>模型名称，如 <code>gpt-4</code>, <code>claude-3</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>messages</code></td>
+                            <td>array</td>
+                            <td>是</td>
+                            <td>消息列表，包含 role 和 content</td>
+                        </tr>
+                        <tr>
+                            <td><code>temperature</code></td>
+                            <td>number</td>
+                            <td>否</td>
+                            <td>随机性，范围 0-2，默认 1</td>
+                        </tr>
+                        <tr>
+                            <td><code>max_tokens</code></td>
+                            <td>integer</td>
+                            <td>否</td>
+                            <td>最大生成 token 数</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="docs-code">
+                    <div class="docs-code-header">
+                        <span class="docs-code-title">cURL 示例</span>
+                        <button class="copy-btn" onclick="copyCode(this)">
+                            <span>📋</span> 复制
+                        </button>
+                    </div>
+                    <pre><code>curl https://api.tokenhub.com/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer sk-your-api-key" \
+  -d '{
+    "model": "gpt-4",
+    "messages": [
+      {"role": "system", "content": "You are a helpful assistant."},
+      {"role": "user", "content": "Hello!"}
+    ],
+    "temperature": 0.7
+  }'</code></pre>
+                </div>
+            </section>
+
+            <!-- SDK Examples -->
+            <section class="docs-section" id="python-sdk">
+                <h2 class="docs-section-title">SDK 示例</h2>
+                <div class="docs-text">
+                    <p>我们提供多种编程语言的 SDK 示例，帮助您快速集成。</p>
+                </div>
+
+                <div class="quick-links">
+                    <a href="#" class="quick-link">
+                        <span class="quick-link-icon">🐍</span>
+                        <div class="quick-link-content">
+                            <div class="quick-link-title">Python SDK</div>
+                            <div class="quick-link-desc">官方推荐的 Python 客户端库</div>
+                        </div>
+                    </a>
+                    <a href="#" class="quick-link">
+                        <span class="quick-link-icon">🟩</span>
+                        <div class="quick-link-content">
+                            <div class="quick-link-title">Node.js SDK</div>
+                            <div class="quick-link-desc">适用于 Node.js 和浏览器</div>
+                        </div>
+                    </a>
+                    <a href="#" class="quick-link">
+                        <span class="quick-link-icon">☕</span>
+                        <div class="quick-link-content">
+                            <div class="quick-link-title">Java SDK</div>
+                            <div class="quick-link-desc">Java 客户端库</div>
+                        </div>
+                    </a>
+                    <a href="#" class="quick-link">
+                        <span class="quick-link-icon">🐹</span>
+                        <div class="quick-link-content">
+                            <div class="quick-link-title">Go SDK</div>
+                            <div class="quick-link-desc">Go 语言客户端</div>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- FAQ -->
+            <section class="docs-section" id="faq-general">
+                <h2 class="docs-section-title">常见问题</h2>
+                
+                <div class="docs-text">
+                    <h3 style="font-size: 1.25rem; margin: 1.5rem 0 1rem;">Q: 如何获取 API Key？</h3>
+                    <p>A: 登录控制台后，进入「API 密钥」页面，点击「创建新密钥」即可生成。请妥善保存，密钥只会显示一次。</p>
+
+                    <h3 style="font-size: 1.25rem; margin: 1.5rem 0 1rem;">Q: 支持的模型有哪些？</h3>
+                    <p>A: 目前支持 OpenAI (GPT-3.5/4)、Anthropic (Claude 3)、Google (Gemini)、DeepSeek、MiniMax 等主流模型。完整列表请查看<a href="/#models">模型页面</a>。</p>
+
+                    <h3 style="font-size: 1.25rem; margin: 1.5rem 0 1rem;">Q: 如何计费？</h3>
+                    <p>A: 按实际使用的 Token 数量计费，不同模型价格不同。您可以在控制台实时查看用量明细和消费记录。</p>
+
+                    <h3 style="font-size: 1.25rem; margin: 1.5rem 0 1rem;">Q: 充值后多久到账？</h3>
+                    <p>A: 支付成功后立即到账，支持支付宝、微信支付等多种支付方式。</p>
+                </div>
+            </section>
+
+            <!-- Error Codes -->
+            <section class="docs-section" id="faq-errors">
+                <h2 class="docs-section-title">错误码说明</h2>
+                
+                <table class="docs-table">
+                    <thead>
+                        <tr>
+                            <th>错误码</th>
+                            <th>说明</th>
+                            <th>解决方案</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>400</code></td>
+                            <td>请求参数错误</td>
+                            <td>检查请求参数格式和内容</td>
+                        </tr>
+                        <tr>
+                            <td><code>401</code></td>
+                            <td>认证失败</td>
+                            <td>检查 API Key 是否正确</td>
+                        </tr>
+                        <tr>
+                            <td><code>429</code></td>
+                            <td>请求频率超限</td>
+                            <td>降低请求频率或升级套餐</td>
+                        </tr>
+                        <tr>
+                            <td><code>500</code></td>
+                            <td>服务器内部错误</td>
+                            <td>联系技术支持</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <div class="info-box info" style="margin-top: 3rem;">
+                <div class="info-box-title">📞 需要帮助？</div>
+                <p>如果文档无法解决您的问题，请联系我们的技术支持团队：<br>
+                📧 Email: support@tokenhub.com<br>
+                💬 微信客服：TokenHub_Support</p>
+            </div>
+        </article>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="40" height="40" rx="8" fill="url(#footer-logo-gradient)"/>
+                            <path d="M20 10L28 24H12L20 10Z" fill="white"/>
+                            <circle cx="20" cy="26" r="4" fill="white" fill-opacity="0.8"/>
+                            <defs>
+                                <linearGradient id="footer-logo-gradient" x1="0" y1="0" x2="40" y2="40">
+                                    <stop offset="0%" stop-color="#667EEA"/>
+                                    <stop offset="100%" stop-color="#764BA2"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <span>TokenHub</span>
+                    </div>
+                    <p class="footer-desc">专业的 AI Token 中转服务平台，让 AI 接入更简单</p>
+                </div>
+                <div class="footer-col">
+                    <h4>产品</h4>
+                    <ul>
+                        <li><a href="/#features">功能特点</a></li>
+                        <li><a href="/#models">支持模型</a></li>
+                        <li><a href="/#pricing">价格方案</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>资源</h4>
+                    <ul>
+                        <li><a href="/docs">文档中心</a></li>
+                        <li><a href="#">API 状态</a></li>
+                        <li><a href="#">示例代码</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>公司</h4>
+                    <ul>
+                        <li><a href="#">关于我们</a></li>
+                        <li><a href="#">联系方式</a></li>
+                        <li><a href="#">服务条款</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 TokenHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/docs.js"></script>
+</body>
+</html>

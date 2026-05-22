@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TokenHub - AI Token 中转站 | 稳定·低价·高速</title>
+    <meta name="description" content="TokenHub 是专业的 AI Token 中转服务平台，提供 OpenAI、Claude、Gemini、DeepSeek 等主流 AI 模型的稳定接入服务。支持按需计费，价格透明，7x24 小时不间断服务。">
+    <meta name="keywords" content="AI Token,OpenAI,Claude,Gemini,DeepSeek,API 中转,AI 服务">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/assets/images/logo.svg">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/home.css">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="home-page">
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="/" class="logo">
+                <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#logo-gradient)"/>
+                    <path d="M20 10L28 24H12L20 10Z" fill="white"/>
+                    <circle cx="20" cy="26" r="4" fill="white" fill-opacity="0.8"/>
+                    <defs>
+                        <linearGradient id="logo-gradient" x1="0" y1="0" x2="40" y2="40">
+                            <stop offset="0%" stop-color="#667EEA"/>
+                            <stop offset="100%" stop-color="#764BA2"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span class="logo-text">TokenHub</span>
+            </a>
+            
+            <div class="nav-links" id="navLinks">
+                <a href="#features" class="nav-link">功能特点</a>
+                <a href="#pricing" class="nav-link">价格方案</a>
+                <a href="#models" class="nav-link">支持模型</a>
+                <a href="/docs" class="nav-link">文档中心</a>
+                <a href="/topup" class="nav-link btn-primary">立即充值</a>
+            </div>
+            
+            <button class="nav-toggle" id="navToggle" aria-label="切换菜单">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-container">
+            <div class="hero-content">
+                <div class="badge">🚀 新用户注册即送 ¥10 体验金</div>
+                <h1 class="hero-title">
+                    让 AI 接入<br>
+                    <span class="gradient-text">更简单、更便宜、更稳定</span>
+                </h1>
+                <p class="hero-subtitle">
+                    TokenHub 是专业的 AI Token 中转服务平台，聚合 OpenAI、Claude、Gemini、DeepSeek 等主流 AI 模型，
+                    提供统一的 API 接口，让您专注于业务创新，无需担心渠道稳定性。
+                </p>
+                <div class="hero-cta">
+                    <a href="/register" class="btn btn-large btn-primary">免费注册</a>
+                    <a href="#models" class="btn btn-large btn-outline">查看模型</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">10+</div>
+                        <div class="stat-label">AI 模型</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">99.9%</div>
+                        <div class="stat-label">服务可用性</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">¥0.001</div>
+                        <div class="stat-label">起充金额</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">7x24</div>
+                        <div class="stat-label">技术支持</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="dot red"></span>
+                        <span class="dot yellow"></span>
+                        <span class="dot green"></span>
+                        <span class="file-name">example.py</span>
+                    </div>
+                    <pre><code><span class="keyword">import</span> openai
+
+<span class="comment"># 配置 TokenHub API</span>
+openai.api_base = <span class="string">"https://api.tokenhub.com/v1"</span>
+openai.api_key = <span class="string">"sk-your-api-key"</span>
+
+<span class="comment"># 调用 GPT-4</span>
+response = openai.ChatCompletion.create(
+    model=<span class="string">"gpt-4"</span>,
+    messages=[{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: <span class="string">"Hello!"</span>]
+)
+
+<span class="keyword">print</span>(response.choices[<span class="number">0</span>].message.content)</code></pre>
+                </div>
+            </div>
+        </div>
+        <div class="hero-bg-decoration">
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
+            <div class="blob blob-3"></div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">为什么选择 TokenHub？</h2>
+                <p class="section-subtitle">我们提供业界领先的 AI 中转服务，让您的业务如虎添翼</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡️</div>
+                    <h3>极速接入</h3>
+                    <p>兼容 OpenAI SDK，只需修改 API Base 和 API Key，3 分钟即可完成接入</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>价格优惠</h3>
+                    <p>批量采购降低成本，GPT-4 低至官方价格的 70%，量大更优</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>稳定可靠</h3>
+                    <p>多渠道智能路由，自动故障转移，99.9% 服务可用性保障</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>用量透明</h3>
+                    <p>实时查看 Token 消耗明细，每笔消费清晰可查，支持导出报表</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💳</div>
+                    <h3>便捷支付</h3>
+                    <p>支持支付宝、微信支付，1 元起充，秒级到账，发票齐全</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎧</div>
+                    <h3>专属支持</h3>
+                    <p>7x24 小时技术支持，专属客服群，快速响应您的问题</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Models Section -->
+    <section class="models" id="models">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">支持的 AI 模型</h2>
+                <p class="section-subtitle">聚合全球主流 AI 大模型，一站式满足您的所有需求</p>
+            </div>
+            <div class="models-tabs">
+                <button class="tab-btn active" data-tab="all">全部</button>
+                <button class="tab-btn" data-tab="openai">OpenAI</button>
+                <button class="tab-btn" data-tab="anthropic">Anthropic</button>
+                <button class="tab-btn" data-tab="google">Google</button>
+                <button class="tab-btn" data-tab="chinese">国产模型</button>
+            </div>
+            <div class="models-grid">
+                <div class="model-card" data-category="openai">
+                    <div class="model-badge hot">热门</div>
+                    <div class="model-logo">🤖</div>
+                    <h3>GPT-4 Turbo</h3>
+                    <p class="model-provider">OpenAI</p>
+                    <p class="model-desc">最强的通用 AI 模型，适用于复杂任务</p>
+                    <div class="model-price">
+                        <span class="price-label">价格：</span>
+                        <span class="price-value">¥0.078 / 1K tokens</span>
+                    </div>
+                </div>
+                <div class="model-card" data-category="openai">
+                    <div class="model-logo">⚡</div>
+                    <h3>GPT-3.5 Turbo</h3>
+                    <p class="model-provider">OpenAI</p>
+                    <p class="model-desc">性价比之选，快速响应</p>
+                    <div class="model-price">
+                        <span class="price-label">价格：</span>
+                        <span class="price-value">¥0.0015 / 1K tokens</span>
+                    </div>
+                </div>
+                <div class="model-card" data-category="anthropic">
+                    <div class="model-badge new">新品</div>
+                    <div class="model-logo">🎨</div>
+                    <h3>Claude 3.5 Sonnet</h3>
+                    <p class="model-provider">Anthropic</p>
+                    <p class="model-desc">代码写作双强，上下文 200K</p>
+                    <div class="model-price">
+                        <span class="price-label">价格：</span>
+                        <span class="price-value">¥0.024 / 1K tokens</span>
+                    </div>
+                </div>
+                <div class="model-card" data-category="anthropic">
+                    <div class="model-logo">🔮</div>
+                    <h3>Claude 3 Opus</h3>
+                    <p class="model-provider">Anthropic</p>
+                    <p class="model-desc">最强推理能力，适合科研分析</p>
+                    <div class="model-price">
+                        <span class="price-label">价格：</span>
+                        <span class="price-value">¥0.12 / 1K tokens</span>
+                    </div>
+                </div>
+                <div class="model-card" data-category="google">
+                    <div class="model-logo">🌟</div>
+                    <h3>Gemini Pro</h3>
+                    <p class="model-provider">Google</p>
+                    <p class="model-desc">多模态能力强，支持图片理解</p>
+                    <div class="model-price">
+                        <span class="price-label">价格：</span>
+                        <span class="price-value">¥0.003 / 1K tokens</span>
+                    </div>
+                </div>
+                <div class="model-card" data-category="chinese">
+                    <div class="model-badge hot">热门</div>
+                    <div class="model-logo">🐳</div>
+                    <h3>DeepSeek V2</h3>
+                    <p class="model-provider">深度求索</p>
+                    <p class="model-desc">国产之光，代码能力出众</p>
+                    <div class="model-price">
+                        <span class="price-label">价格：</span>
+                        <span class="price-value">¥0.001 / 1K tokens</span>
+                    </div>
+                </div>
+                <div class="model-card" data-category="chinese">
+                    <div class="model-logo">🌈</div>
+                    <h3>MiniMax</h3>
+                    <p class="model-provider">MiniMax</p>
+                    <p class="model-desc">中文理解优秀，对话流畅</p>
+                    <div class="model-price">
+                        <span class="price-label">价格：</span>
+                        <span class="price-value">¥0.002 / 1K tokens</span>
+                    </div>
+                </div>
+                <div class="model-card" data-category="chinese">
+                    <div class="model-logo">💫</div>
+                    <h3>通义千问</h3>
+                    <p class="model-provider">阿里云</p>
+                    <p class="model-desc">阿里出品，综合能力均衡</p>
+                    <div class="model-price">
+                        <span class="price-label">价格：</span>
+                        <span class="price-value">¥0.004 / 1K tokens</span>
+                    </div>
+                </div>
+            </div>
+            <div class="models-cta">
+                <a href="/plans" class="btn btn-primary">查看全部套餐</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">灵活的价格方案</h2>
+                <p class="section-subtitle">按需充值，用多少付多少，无隐藏费用</p>
+            </div>
+            <div class="pricing-cards">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>体验版</h3>
+                        <div class="pricing-amount">¥10<span>起</span></div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>✅ 所有模型可用</li>
+                        <li>✅ 标准优先级</li>
+                        <li>✅ 基础技术支持</li>
+                        <li>✅ 用量统计</li>
+                        <li>❌ 专属客服</li>
+                        <li>❌ SLA 保障</li>
+                    </ul>
+                    <a href="/topup?amount=10" class="btn btn-outline btn-block">选择此方案</a>
+                </div>
+                <div class="pricing-card popular">
+                    <div class="popular-badge">最受欢迎</div>
+                    <div class="pricing-header">
+                        <h3>专业版</h3>
+                        <div class="pricing-amount">¥100<span>起</span></div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>✅ 所有模型可用</li>
+                        <li>✅ 高优先级</li>
+                        <li>✅ 优先技术支持</li>
+                        <li>✅ 详细用量报表</li>
+                        <li>✅ 专属客服群</li>
+                        <li>❌ SLA 保障</li>
+                    </ul>
+                    <a href="/topup?amount=100" class="btn btn-primary btn-block">选择此方案</a>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>企业版</h3>
+                        <div class="pricing-amount">¥1000<span>起</span></div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>✅ 所有模型可用</li>
+                        <li>✅ 最高优先级</li>
+                        <li>✅ 7x24 专属支持</li>
+                        <li>✅ 定制化报表</li>
+                        <li>✅ 专属客户经理</li>
+                        <li>✅ 99.9% SLA 保障</li>
+                    </ul>
+                    <a href="/topup?amount=1000" class="btn btn-outline btn-block">联系销售</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-box">
+                <h2>准备好开始了吗？</h2>
+                <p>立即注册，领取 ¥10 体验金，开启您的 AI 之旅</p>
+                <div class="cta-buttons">
+                    <a href="/register" class="btn btn-large btn-white">免费注册</a>
+                    <a href="/docs" class="btn btn-large btn-outline-light">查看文档</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="40" height="40" rx="8" fill="url(#footer-logo-gradient)"/>
+                            <path d="M20 10L28 24H12L20 10Z" fill="white"/>
+                            <circle cx="20" cy="26" r="4" fill="white" fill-opacity="0.8"/>
+                            <defs>
+                                <linearGradient id="footer-logo-gradient" x1="0" y1="0" x2="40" y2="40">
+                                    <stop offset="0%" stop-color="#667EEA"/>
+                                    <stop offset="100%" stop-color="#764BA2"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <span>TokenHub</span>
+                    </div>
+                    <p class="footer-desc">专业的 AI Token 中转服务平台，让 AI 接入更简单</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="微信">微信</a>
+                        <a href="#" class="social-link" aria-label="微博">微博</a>
+                        <a href="#" class="social-link" aria-label="GitHub">GitHub</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>产品</h4>
+                    <ul>
+                        <li><a href="#features">功能特点</a></li>
+                        <li><a href="#models">支持模型</a></li>
+                        <li><a href="#pricing">价格方案</a></li>
+                        <li><a href="/plans">套餐购买</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>资源</h4>
+                    <ul>
+                        <li><a href="/docs">文档中心</a></li>
+                        <li><a href="#">API 参考</a></li>
+                        <li><a href="#">示例代码</a></li>
+                        <li><a href="#">状态监控</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>公司</h4>
+                    <ul>
+                        <li><a href="#">关于我们</a></li>
+                        <li><a href="#">联系方式</a></li>
+                        <li><a href="#">服务条款</a></li>
+                        <li><a href="#">隐私政策</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 TokenHub. All rights reserved.</p>
+                <p>京 ICP 备 XXXXXXXX 号</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/home.js"></script>
+</body>
+</html>

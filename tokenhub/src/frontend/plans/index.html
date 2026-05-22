@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>套餐购买 - TokenHub AI Token 中转站</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .plan-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+        }
+
+        .plan-card.popular {
+            border: 2px solid #667eea;
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: 20px;
+            right: -30px;
+            background: #667eea;
+            color: white;
+            padding: 5px 40px;
+            transform: rotate(45deg);
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .plan-price {
+            font-size: 2.5rem;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .plan-price span {
+            font-size: 1rem;
+            color: #999;
+        }
+
+        .plan-description {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .plan-features li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            color: #555;
+            display: flex;
+            align-items: center;
+        }
+
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+
+        .plan-features li::before {
+            content: '✓';
+            color: #10b981;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .buy-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .buy-btn:hover {
+            opacity: 0.9;
+        }
+
+        .buy-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+
+        .modal h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .order-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .order-info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .order-info-row:last-child {
+            margin-bottom: 0;
+            padding-top: 10px;
+            border-top: 2px solid #dee2e6;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .payment-methods {
+            margin-bottom: 20px;
+        }
+
+        .payment-method {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .payment-method:hover {
+            border-color: #667eea;
+        }
+
+        .payment-method.selected {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .payment-method input[type="radio"] {
+            margin-right: 15px;
+        }
+
+        .payment-method img {
+            width: 40px;
+            height: 40px;
+            margin-right: 15px;
+        }
+
+        .qr-code-container {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 10px;
+            background: #fff;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .countdown {
+            text-align: center;
+            color: #dc3545;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .status-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .status-message.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-message.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-message.warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .plans-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎁 选择适合您的套餐</h1>
+            <p>灵活多样的套餐方案，满足您的不同需求</p>
+        </div>
+
+        <div class="plans-grid" id="plansGrid">
+            <!-- Plans will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h2>确认订单</h2>
+            
+            <div class="order-info">
+                <div class="order-info-row">
+                    <span>套餐名称</span>
+                    <span id="modalPlanName">-</span>
+                </div>
+                <div class="order-info-row">
+                    <span>Token 额度</span>
+                    <span id="modalPlanTokens">-</span>
+                </div>
+                <div class="order-info-row">
+                    <span>有效期</span>
+                    <span id="modalPlanValidity">-</span>
+                </div>
+                <div class="order-info-row">
+                    <span>原价</span>
+                    <span id="modalPlanOriginalPrice">-</span>
+                </div>
+                <div class="order-info-row">
+                    <span>应付金额</span>
+                    <span id="modalPlanPrice" style="color: #667eea;">-</span>
+                </div>
+            </div>
+
+            <div id="statusMessage"></div>
+
+            <div class="payment-methods" id="paymentMethods">
+                <h3 style="margin-bottom: 15px;">选择支付方式</h3>
+                <label class="payment-method selected" onclick="selectPayment('alipay')">
+                    <input type="radio" name="payment" value="alipay" checked>
+                    <div>
+                        <strong>支付宝</strong>
+                        <p style="color: #666; font-size: 0.9rem;">扫码支付，即时到账</p>
+                    </div>
+                </label>
+                <label class="payment-method" onclick="selectPayment('wechat')">
+                    <input type="radio" name="payment" value="wechat">
+                    <div>
+                        <strong>微信支付</strong>
+                        <p style="color: #666; font-size: 0.9rem;">扫码支付，即时到账</p>
+                    </div>
+                </label>
+            </div>
+
+            <div class="qr-code-container" id="qrCodeContainer" style="display: none;">
+                <div class="countdown" id="countdown">订单有效期：15:00</div>
+                <div class="qr-code">
+                    <img id="qrCodeImage" src="" alt="QR Code" style="width: 100%; height: 100%;">
+                </div>
+                <p style="color: #666; font-size: 0.9rem;">请使用<span id="paymentMethodText">支付宝</span>扫一扫<br>二维码完成支付</p>
+            </div>
+
+            <button class="buy-btn" id="confirmBtn" onclick="confirmOrder()">确认购买</button>
+        </div>
+    </div>
+
+    <script>
+        // Sample plans data - In production, this should come from API
+        const plans = [
+            {
+                id: 1,
+                name: '体验版',
+                price: 99,
+                originalPrice: 129,
+                tokens: 1000000,
+                validity: 30,
+                description: '适合个人开发者体验使用',
+                features: [
+                    '100 万 Token 额度',
+                    '30 天有效期',
+                    '支持所有模型',
+                    '基础技术支持',
+                    'API 访问'
+                ],
+                popular: false
+            },
+            {
+                id: 2,
+                name: '标准版',
+                price: 299,
+                originalPrice: 399,
+                tokens: 5000000,
+                validity: 90,
+                description: '适合小型团队日常使用',
+                features: [
+                    '500 万 Token 额度',
+                    '90 天有效期',
+                    '支持所有模型',
+                    '优先技术支持',
+                    'API 访问',
+                    '用量统计'
+                ],
+                popular: true
+            },
+            {
+                id: 3,
+                name: '专业版',
+                price: 599,
+                originalPrice: 799,
+                tokens: 15000000,
+                validity: 180,
+                description: '适合中型企业高频使用',
+                features: [
+                    '1500 万 Token 额度',
+                    '180 天有效期',
+                    '支持所有模型',
+                    '专属技术支持',
+                    'API 访问',
+                    '详细用量统计',
+                    '自定义告警'
+                ],
+                popular: false
+            },
+            {
+                id: 4,
+                name: '企业版',
+                price: 1999,
+                originalPrice: 2999,
+                tokens: 100000000,
+                validity: 365,
+                description: '适合大型企业大规模使用',
+                features: [
+                    '1 亿 Token 额度',
+                    '365 天有效期',
+                    '支持所有模型',
+                    '7x24 专属客服',
+                    'API 访问',
+                    '完整用量分析',
+                    '自定义告警',
+                    'SLA 保障',
+                    '私有化部署选项'
+                ],
+                popular: false
+            }
+        ];
+
+        let currentPlan = null;
+        let currentPayment = 'alipay';
+        let orderPollingInterval = null;
+
+        // Render plans
+        function renderPlans() {
+            const grid = document.getElementById('plansGrid');
+            grid.innerHTML = plans.map(plan => `
+                <div class="plan-card ${plan.popular ? 'popular' : ''}">
+                    ${plan.popular ? '<div class="popular-badge">热门推荐</div>' : ''}
+                    <h3 class="plan-name">${plan.name}</h3>
+                    <div class="plan-price">¥${plan.price}<span> / ${plan.validity}天</span></div>
+                    <p class="plan-description">${plan.description}</p>
+                    <ul class="plan-features">
+                        ${plan.features.map(f => `<li>${f}</li>`).join('')}
+                    </ul>
+                    <button class="buy-btn" onclick="openPaymentModal(${plan.id})">立即购买</button>
+                </div>
+            `).join('');
+        }
+
+        // Open payment modal
+        function openPaymentModal(planId) {
+            currentPlan = plans.find(p => p.id === planId);
+            if (!currentPlan) return;
+
+            document.getElementById('modalPlanName').textContent = currentPlan.name;
+            document.getElementById('modalPlanTokens').textContent = currentPlan.tokens.toLocaleString();
+            document.getElementById('modalPlanValidity').textContent = currentPlan.validity + '天';
+            document.getElementById('modalPlanOriginalPrice').textContent = '¥' + currentPlan.originalPrice;
+            document.getElementById('modalPlanPrice').textContent = '¥' + currentPlan.price;
+
+            document.getElementById('statusMessage').innerHTML = '';
+            document.getElementById('qrCodeContainer').style.display = 'none';
+            document.getElementById('confirmBtn').style.display = 'block';
+            document.getElementById('paymentMethods').style.display = 'block';
+
+            document.getElementById('paymentModal').classList.add('active');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('paymentModal').classList.remove('active');
+            if (orderPollingInterval) {
+                clearInterval(orderPollingInterval);
+                orderPollingInterval = null;
+            }
+        }
+
+        // Select payment method
+        function selectPayment(method) {
+            currentPayment = method;
+            document.querySelectorAll('.payment-method').forEach(el => {
+                el.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+        }
+
+        // Confirm order
+        async function confirmOrder() {
+            const confirmBtn = document.getElementById('confirmBtn');
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = '创建订单中...';
+
+            try {
+                // In production, call API to create order
+                // const response = await fetch('/api/order/create', {
+                //     method: 'POST',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     body: JSON.stringify({
+                //         plan_id: currentPlan.id,
+                //         payment_method: currentPayment
+                //     })
+                // });
+                // const data = await response.json();
+
+                // Simulate API response
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                const data = {
+                    success: true,
+                    order_id: 'ORDER_' + Date.now(),
+                    qr_code: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+                    expire_time: 900 // 15 minutes
+                };
+
+                if (data.success) {
+                    document.getElementById('paymentMethods').style.display = 'none';
+                    document.getElementById('confirmBtn').style.display = 'none';
+                    document.getElementById('qrCodeContainer').style.display = 'block';
+                    
+                    // Set QR code (in production, use actual QR code from API)
+                    document.getElementById('qrCodeImage').src = data.qr_code;
+                    document.getElementById('paymentMethodText').textContent = 
+                        currentPayment === 'alipay' ? '支付宝' : '微信';
+
+                    // Start countdown
+                    startCountdown(data.expire_time);
+
+                    // Start polling for payment status
+                    pollPaymentStatus(data.order_id);
+
+                    showStatus('请扫描二维码完成支付', 'warning');
+                } else {
+                    showStatus('订单创建失败：' + (data.message || '未知错误'), 'error');
+                    confirmBtn.disabled = false;
+                    confirmBtn.textContent = '确认购买';
+                }
+            } catch (error) {
+                console.error('Order creation failed:', error);
+                showStatus('网络错误，请稍后重试', 'error');
+                confirmBtn.disabled = false;
+                confirmBtn.textContent = '确认购买';
+            }
+        }
+
+        // Start countdown
+        function startCountdown(seconds) {
+            let remaining = seconds;
+            const countdownEl = document.getElementById('countdown');
+
+            const updateCountdown = () => {
+                const minutes = Math.floor(remaining / 60);
+                const secs = remaining % 60;
+                countdownEl.textContent = `订单有效期：${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                
+                if (remaining <= 0) {
+                    clearInterval(orderPollingInterval);
+                    countdownEl.textContent = '订单已过期';
+                    showStatus('订单已过期，请重新下单', 'error');
+                    setTimeout(() => {
+                        closeModal();
+                    }, 2000);
+                }
+                remaining--;
+            };
+
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        }
+
+        // Poll payment status
+        function pollPaymentStatus(orderId) {
+            let pollCount = 0;
+            const maxPolls = 60; // Poll for max 5 minutes (60 * 5s)
+
+            orderPollingInterval = setInterval(async () => {
+                if (pollCount >= maxPolls) {
+                    clearInterval(orderPollingInterval);
+                    showStatus('支付超时，请刷新页面重试', 'error');
+                    return;
+                }
+
+                try {
+                    // In production, call API to check payment status
+                    // const response = await fetch(`/api/order/${orderId}/status`);
+                    // const data = await response.json();
+
+                    // Simulate API response
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    const data = {
+                        paid: false, // Change to true to simulate successful payment
+                        status: 'pending'
+                    };
+
+                    if (data.paid) {
+                        clearInterval(orderPollingInterval);
+                        showStatus('支付成功！正在为您充值...', 'success');
+                        setTimeout(() => {
+                            alert('支付成功！Token 已充值到您的账户。');
+                            closeModal();
+                            // Redirect to dashboard or refresh page
+                            window.location.reload();
+                        }, 2000);
+                    }
+
+                    pollCount++;
+                } catch (error) {
+                    console.error('Polling failed:', error);
+                    pollCount++;
+                }
+            }, 5000); // Poll every 5 seconds
+        }
+
+        // Show status message
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.className = `status-message ${type}`;
+            statusEl.textContent = message;
+            statusEl.style.display = 'block';
+        }
+
+        // Close modal on overlay click
+        document.getElementById('paymentModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                closeModal();
+            }
+        });
+
+        // Initialize
+        renderPlans();
+    </script>
+</body>
+</html>

@@ -1,258 +1,251 @@
 # TokenHub - AI Token 中转站商业平台
 
-> 项目代号：TokenHub  
-> 版本：V1.0  
-> 基于 New API (https://github.com/QuantumNous/new-api) 二次开发
-
-## 项目简介
-
-TokenHub 是一个商业级 AI Token 中转站平台，实现：
-
-1. **统一 API 接入**：通过标准 OpenAI API 格式访问所有主流 AI 服务商
-2. **隐藏真实 Key**：用户只能访问中转站 API Key，无需暴露上游真实 API Key
-3. **多租户管理**：支持多用户、额度分配、权限控制
-4. **商业化运营**：支持充值、套餐、计费体系，实现 API 转售盈利
-5. **高可用架构**：支持高并发、多节点部署
-
-## 支持的 AI 提供商
-
-- ✅ OpenAI (GPT-4o, GPT-4 Turbo, GPT-3.5 Turbo)
-- ✅ Anthropic (Claude 3.5 Sonnet, Claude 3 Opus)
-- ✅ Google (Gemini Pro, Gemini Ultra)
-- ✅ DeepSeek (DeepSeek Chat, DeepSeek Coder)
-- ✅ MiniMax (MiniMax-ABAB 系列)
-- ✅ 硅基流动 (多模型聚合)
-
-## 快速开始
-
-### 环境要求
-
-- Docker 24.0+
-- Docker Compose 2.20+
-- Ubuntu 22.04 LTS (推荐)
-
-### 一键部署
-
-```bash
-# 克隆项目
-git clone <repository-url>
-cd tokenhub/deploy
-
-# 配置环境变量
-cp .env.example .env
-# 编辑 .env 文件，设置 MySQL/Redis 密码等
-
-# 启动服务
-docker-compose up -d
-
-# 查看日志
-docker-compose logs -f
-```
-
-### 默认访问地址
-
-- 用户前台：http://localhost:3000
-- 管理后台：http://localhost:3000/admin
-- API 端点：http://localhost:3000/v1
-
-### 初始管理员账号
-
-首次部署后，请查看日志获取初始管理员账号：
-
-```bash
-docker-compose logs new-api | grep "admin"
-```
-
-## 项目结构
-
-```
-tokenhub/
-├── deploy/                 # 部署配置文件
-│   ├── docker-compose.yml  # Docker Compose 配置
-│   ├── .env.example        # 环境变量模板
-│   └── nginx/              # Nginx 配置
-├── docs/                   # 项目文档
-│   ├── 01_AI_Token_request.md      # 需求文档
-│   ├── 02_AI-Token_designel.md     # 设计文档
-│   ├── 03_AI-Token_task_plan.md    # 任务计划
-│   └── 04_AI-Token_revie.md        # 验收清单
-├── src/
-│   ├── payment/            # 支付模块（新开发）
-│   │   ├── alipay.go       # 支付宝集成
-│   │   ├── wechat.go       # 微信支付集成
-│   │   └── aggregate.go    # 聚合支付集成
-│   └── frontend/           # 前端定制页面
-│       ├── topup/          # 充值页面
-│       └── plans/          # 套餐页面
-└── README.md
-```
-
-## 功能特性
-
-### 用户功能 ✅
-
-- [x] 用户注册/登录
-- [x] 邮箱验证
-- [x] 密码重置
-- [x] API Key 管理
-- [x] 余额查看
-- [ ] 在线充值（支付宝/微信）🆕
-- [ ] 套餐购买 🆕
-- [x] 用量明细
-- [ ] 开发者文档 🆕
-
-### 管理功能 ✅
-
-- [x] 用户管理
-- [x] 渠道管理
-- [x] 模型管理
-- [ ] 订单管理 🛠️
-- [ ] 财务报表 🆕
-- [x] 系统监控
-- [x] 日志审计
-
-### 核心业务 ✅
-
-- [x] Token 计费（prompt + completion 分开计费）
-- [x] 代理转发（兼容 OpenAI ChatGPT API 格式）
-- [x] 流式返回（SSE 流式传输）
-- [x] 多 Provider 接入
-- [x] 智能路由
-- [x] 限流策略
-- [ ] 防滥用 🛠️
-
-## 开发来源说明
-
-| 标识 | 含义 | 说明 |
-|------|------|------|
-| ✅ | New API 现成 | 直接部署即可，无需开发 |
-| 🛠️ | 二次开发 | 基于 New API 源码修改 |
-| 🆕 | 全新开发 | 从零开发，新增功能 |
-
-## 技术栈
-
-| 组件 | 选型 | 说明 |
-|------|------|------|
-| 核心系统 | New API | 开源方案，二次开发 |
-| 编程语言 | Go 1.21+ | New API 原生语言 |
-| 数据库 | MySQL 8.0 | 主数据存储 |
-| 缓存 | Redis 7.0 | 会话缓存、限流计数 |
-| 部署方式 | Docker + Docker Compose | 容器化部署 |
-| 反向代理 | Nginx 1.25+ | 负载均衡、SSL 终止 |
-
-## API 使用示例
-
-### 获取可用模型
-
-```bash
-curl http://localhost:3000/v1/models \
-  -H "Authorization: Bearer YOUR_API_KEY"
-```
-
-### 聊天补全
-
-```bash
-curl http://localhost:3000/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -d '{
-    "model": "gpt-4o",
-    "messages": [
-      {"role": "user", "content": "Hello!"}
-    ]
-  }'
-```
-
-### 流式调用
-
-```bash
-curl http://localhost:3000/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -d '{
-    "model": "gpt-4o",
-    "messages": [
-      {"role": "user", "content": "Hello!"}
-    ],
-    "stream": true
-  }'
-```
-
-## 性能指标
-
-| 指标 | 目标值 |
-|------|--------|
-| API 延迟 | P99 < 500ms（不含上游 AI 服务延迟） |
-| 并发支持 | 单节点 500+ 并发连接 |
-| 可用性 | 99.5% 以上 |
-| 扩展性 | 支持水平扩展，多节点部署 |
-
-## 安全特性
-
-- ✅ 数据加密：用户 API Key 加密存储（AES-256）
-- ✅ 传输安全：全站 HTTPS，强制 TLS 1.2+
-- ✅ 访问控制：API Key 与用户权限绑定
-- ✅ 审计日志：完整操作日志，留存 180 天
-
-## 待开发功能
-
-### 🆕 全新开发（优先级高）
-
-1. **支付模块**
-   - 支付宝当面付对接
-   - 微信支付对接
-   - 聚合支付（Payspi/XPay）对接
-   - 支付回调处理
-
-2. **前端页面**
-   - 充值页面 (/topup)
-   - 套餐购买页面 (/plans)
-   - 帮助文档中心 (/docs)
-   - 财务报表页面 (/admin/finance)
-
-3. **增强功能**
-   - 邮件通知
-   - 钉钉告警集成
-   - IP 白名单
-   - 用量告警
-
-### 🛠️ 二次开发（优先级中）
-
-1. **UI 定制**
-   - Logo 更换
-   - 主题色定制
-   - 首页落地页定制
-
-2. **安全增强**
-   - Nginx 限流规则
-   - 防爬机制
-   - SSL/HTTPS 配置
-
-## 开发计划
-
-| 阶段 | 时间 | 主要内容 |
-|------|------|---------|
-| 阶段一 | 第 1-2 周 | 环境准备与 New API 部署 ✅ |
-| 阶段二 | 第 3 周 | AI 渠道接入 ✅ |
-| 阶段三 | 第 4-5 周 | 支付系统开发 🆕 |
-| 阶段四 | 第 6-7 周 | UI 定制与增强 🛠️ |
-| 阶段五 | 第 8-10 周 | 测试优化与上线 🛠️ |
-
-## 参考文档
-
-- [New API 官方文档](https://docs.newapi.pro/)
-- [New API GitHub](https://github.com/QuantumNous/new-api)
-- [One API（上游项目）](https://github.com/songquanpeng/one-api)
-
-## License
-
-本项目基于 New API 二次开发，遵循原项目开源协议。
-
-## 联系方式
-
-- 项目 Issues: [GitHub Issues](https://github.com/your-org/tokenhub/issues)
-- 技术支持：support@tokenhub.example.com
+> 项目版本：V1.0  
+> 最后更新：2025 年 5 月 22 日  
+> 基于 New API 二次开发
 
 ---
 
-**最后更新**: 2025 年 5 月
+## 📖 项目简介
+
+TokenHub 是一个**商业级 AI Token 中转站平台**，基于开源 New API 项目进行二次开发，提供统一的 AI API 接入、用户管理、计费系统和支付功能。
+
+### 核心价值
+
+- 🔒 **安全**：隐藏真实 API Key，防止泄露
+- 💰 **商业化**：完整的充值、套餐、计费体系
+- 🚀 **高效**：兼容 OpenAI API 格式，开箱即用
+- 📊 **可观测**：用量统计、财务报表、监控告警
+
+---
+
+## 🏗️ 项目结构
+
+```
+/workspace/tokenhub/
+├── deploy/                          # 部署配置目录
+│   ├── docker-compose.yml           # Docker Compose 编排文件
+│   ├── .env.example                 # 环境变量模板
+│   ├── nginx/
+│   │   ├── nginx.conf               # Nginx 主配置（限流、Gzip）
+│   │   └── conf.d/default.conf      # 站点配置（HTTPS、WebSocket）
+│   ├── init-scripts/
+│   │   └── 01_init_tables.sql       # MySQL 初始化脚本（含扩展表）
+│   ├── ssl/                         # SSL 证书目录
+│   ├── data/                        # 数据持久化目录
+│   └── logs/                        # 日志目录
+│
+├── src/                             # 源代码目录（🆕 全新开发）
+│   ├── payment/
+│   │   └── gateway.go               # 支付网关（支付宝/微信）
+│   └── frontend/
+│       ├── topup/index.html         # 在线充值页面
+│       └── plans/index.html         # 套餐购买页面
+│
+└── docs/                            # 文档目录
+    ├── README.md                    # 本文件
+    ├── COMPLETE_DEPLOYMENT.md       # 📘 完整部署指南（821 行）
+    ├── DEPLOYMENT.md                # 基础部署文档
+    └── API_GUIDE.md                 # API 使用文档
+```
+
+---
+
+## ✅ 已交付内容
+
+### 1. 部署配置（deploy/）
+
+| 文件 | 状态 | 说明 |
+|------|------|------|
+| `docker-compose.yml` | ✅ | New API + MySQL + Redis + Nginx 完整编排 |
+| `.env.example` | ✅ | 包含所有必要环境变量的模板 |
+| `nginx/nginx.conf` | 🛠️ | 定制配置（限流、Gzip 压缩、安全头） |
+| `nginx/conf.d/default.conf` | 🛠️ | 站点配置（HTTP/HTTPS、WebSocket、反向代理） |
+| `init-scripts/01_init_tables.sql` | 🆕 | 扩展数据库表（充值记录、套餐、支付流水） |
+
+### 2. 新开发代码（src/）
+
+| 文件 | 状态 | 说明 |
+|------|------|------|
+| `payment/gateway.go` | 🆕 | 支付网关 Go 代码框架 |
+| `frontend/topup/index.html` | 🆕 | 响应式充值页面（扫码支付、订单轮询） |
+| `frontend/plans/index.html` | 🆕 | 套餐购买页面（4 档套餐、支付弹窗） |
+
+### 3. 文档（docs/）
+
+| 文件 | 页数 | 说明 |
+|------|------|------|
+| `COMPLETE_DEPLOYMENT.md` | 821 行 | 📘 **完整部署指南**（含生产环境配置） |
+| `DEPLOYMENT.md` | 327 行 | 基础部署文档 |
+| `API_GUIDE.md` | 429 行 | API 使用文档（含代码示例） |
+
+---
+
+## 🎯 核心功能
+
+### 用户侧功能
+
+| 功能 | 状态 | 说明 |
+|------|------|------|
+| 用户注册/登录 | ✅ | New API 原生支持 |
+| 邮箱验证 | ✅ | New API 原生支持 |
+| API Key 管理 | ✅ | New API 原生支持 |
+| 额度查看 | ✅ | New API 原生支持 |
+| **在线充值** | 🆕 | 支付宝/微信支付 |
+| **套餐购买** | 🆕 | 4 档套餐可选 |
+| 用量明细 | ✅ | New API 原生支持 |
+| 开发者文档 | ✅ | 见 `API_GUIDE.md` |
+
+### 管理侧功能
+
+| 功能 | 状态 | 说明 |
+|------|------|------|
+| 用户管理 | ✅ | New API 原生支持 |
+| 渠道管理 | ✅ | New API 原生支持 |
+| 模型管理 | ✅ | New API 原生支持 |
+| **订单管理** | 🆕 | 充值/套餐订单 |
+| 财务管理 | 🆕 | 报表功能（待完善） |
+| 系统监控 | 🛠️ | Prometheus+Grafana |
+
+---
+
+## 🚀 快速开始
+
+### 方式一：Docker Compose 部署（推荐）
+
+```bash
+# 1. 进入部署目录
+cd /workspace/tokenhub/deploy
+
+# 2. 配置环境变量
+cp .env.example .env
+vim .env  # 编辑配置
+
+# 3. 启动所有服务
+docker-compose up -d
+
+# 4. 查看服务状态
+docker-compose ps
+
+# 5. 访问前端页面
+# 浏览器打开：http://你的服务器 IP/topup/index.html
+# 浏览器打开：http://你的服务器 IP/plans/index.html
+```
+
+### 方式二：手动部署（生产环境）
+
+详细步骤请参考：**[完整部署指南](docs/COMPLETE_DEPLOYMENT.md)**
+
+---
+
+## 📦 技术栈
+
+| 组件 | 技术选型 | 说明 |
+|------|---------|------|
+| 核心系统 | New API (Go) | 开源 API 中转系统 |
+| 数据库 | MySQL 8.0 | 数据存储 |
+| 缓存 | Redis 7.0 | 会话/限流 |
+| Web 服务器 | Nginx | 反向代理/负载均衡 |
+| 前端 | HTML5 + CSS3 + JS | 响应式设计 |
+| 支付 | 支付宝/微信 | 扫码支付 |
+| 部署 | Docker + Compose | 容器化部署 |
+
+---
+
+## 📋 下一步建议
+
+根据任务计划书，后续还需完成：
+
+### 阶段三：支付系统开发（第 4-5 周）🆕
+
+- [ ] 完善支付后端 API（`payment/gateway.go`）
+- [ ] 对接支付宝官方 API
+- [ ] 对接微信支付官方 API
+- [ ] 实现支付回调处理
+- [ ] 订单管理功能
+
+### 阶段四：UI 定制与增强（第 6-7 周）🛠️
+
+- [ ] Logo 更换与品牌定制
+- [ ] 主题色定制
+- [ ] 首页落地页开发
+- [ ] 帮助文档页面
+- [ ] 财务报表页面
+- [ ] 邮件通知功能
+
+### 阶段五：测试优化与上线（第 8-10 周）
+
+- [ ] 功能测试
+- [ ] 压力测试
+- [ ] 性能优化
+- [ ] 监控告警配置
+- [ ] 正式上线
+
+---
+
+## 📚 文档导航
+
+| 文档 | 用途 | 链接 |
+|------|------|------|
+| 📘 完整部署指南 | 生产环境部署 | [查看](docs/COMPLETE_DEPLOYMENT.md) |
+| 📗 基础部署文档 | 快速测试部署 | [查看](docs/DEPLOYMENT.md) |
+| 📙 API 使用文档 | 开发者参考 | [查看](docs/API_GUIDE.md) |
+| 📕 需求说明书 | 功能需求详情 | [查看](/workspace/01_AI_Token_request.md) |
+| 📔 设计方案 | 技术设计细节 | [查看](/workspace/02_AI-Token_designel.md) |
+| 📓 任务计划 | 开发进度规划 | [查看](/workspace/03_AI-Token_task_plan.md) |
+
+---
+
+## 🔧 常用命令
+
+```bash
+# 查看服务状态
+docker-compose ps
+
+# 查看日志
+docker-compose logs -f
+
+# 重启服务
+docker-compose restart
+
+# 停止服务
+docker-compose down
+
+# 重新构建
+docker-compose build --no-cache
+
+# 进入容器
+docker exec -it tokenhub-new-api sh
+
+# 备份数据库
+docker exec tokenhub-mysql mysqldump -u newapi -p newapi > backup.sql
+```
+
+---
+
+## ⚠️ 注意事项
+
+1. **支付资质**：支付宝/微信支付需要商户资质，可使用第三方聚合支付替代
+2. **ICP 备案**：国内服务器必须完成 ICP 备案
+3. **SSL 证书**：生产环境必须启用 HTTPS
+4. **数据安全**：定期备份数据库，妥善保管密钥
+5. **合规经营**：确保 AI 服务内容符合法律法规
+
+---
+
+## 📞 技术支持
+
+- New API 官方文档：https://docs.newapi.pro/
+- New API GitHub：https://github.com/QuantumNous/new-api
+- 本项目 Issues：[待添加]
+
+---
+
+## 📄 许可证
+
+本项目基于 New API 二次开发，遵循原项目许可证。
+
+---
+
+**TokenHub 项目组**  
+2025 年 5 月
