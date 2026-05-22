@@ -1,0 +1,54 @@
+```
+# Environment variables
+.env
+.env.local
+.env.*
+
+# Docker and deployment
+docker-compose.yml
+deploy/
+
+# Database initialization scripts
+init-scripts/
+
+# Configuration files
+nginx/
+conf.d/
+
+# Frontend artifacts (if built)
+src/frontend/*/dist/
+src/frontend/*/build/
+src/frontend/*/node_modules/
+
+# Backend artifacts
+src/payment/*.so
+src/payment/*.dll
+src/payment/*.exe
+
+# Logs
+*.log
+
+# Editor/IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Coverage reports
+coverage/
+htmlcov/
+*.coverage
+
+# Dependency caches
+node_modules/
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+target/
+.gradle/
+```
