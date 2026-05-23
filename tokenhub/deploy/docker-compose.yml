@@ -7,7 +7,7 @@ services:
     container_name: new-api
     restart: always
     ports:
-      - "3000:3000"
+      - "13000:3000"
     environment:
       - TZ=Asia/Shanghai
       - SQL_DSN=${MYSQL_USER}:${MYSQL_PASSWORD}@tcp(mysql:3306)/${MYSQL_DATABASE}?charset=utf8mb4&parseTime=True&loc=Local
@@ -28,7 +28,7 @@ services:
     networks:
       - tokenhub-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/status"]
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/status"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -97,7 +97,8 @@ services:
       - ./ssl:/etc/nginx/ssl:ro
       - ./logs/nginx:/var/log/nginx
     depends_on:
-      - new-api
+      new-api:
+        condition: service_healthy
     networks:
       - tokenhub-network
 
