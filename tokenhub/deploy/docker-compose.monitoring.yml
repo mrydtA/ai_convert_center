@@ -1,0 +1,127 @@
+version: '3.8'
+
+services:
+  # Prometheus 监控服务
+  prometheus:
+    image: prom/prometheus:v2.45.0
+    container_name: prometheus
+    restart: always
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./alerts.yml:/etc/prometheus/alerts.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=15d'
+      - '--web.enable-lifecycle'
+    ports:
+      - "9090:9090"
+    networks:
+      - tokenhub_network
+
+  # Grafana 可视化面板
+  grafana:
+    image: grafana/grafana:10.0.0
+    container_name: grafana
+    restart: always
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana-dashboard.json:/etc/grafana/provisioning/dashboards/dashboard.json
+    ports:
+      - "3000:3000"
+    networks:
+      - tokenhub_network
+    depends_on:
+      - prometheus
+
+  # Alertmanager 告警管理
+  alertmanager:
+    image: prom/alertmanager:v0.25.0
+    container_name: alertmanager
+    restart: always
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+      - alertmanager_data:/alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+    ports:
+      - "9093:9093"
+    networks:
+      - tokenhub_network
+
+  # Node Exporter (系统资源监控)
+  node-exporter:
+    image: prom/node-exporter:v1.6.0
+    container_name: node-exporter
+    restart: always
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"'
+    ports:
+      - "9100:9100"
+    networks:
+      - tokenhub_network
+
+  # MySQL Exporter
+  mysqld-exporter:
+    image: prom/mysqld-exporter:v0.15.0
+    container_name: mysqld-exporter
+    restart: always
+    environment:
+      - DATA_SOURCE_NAME=exporter:YourPassword@(mysql:3306)/
+    ports:
+      - "9104:9104"
+    networks:
+      - tokenhub_network
+    depends_on:
+      - mysql
+
+  # Redis Exporter
+  redis-exporter:
+    image: oliver006/redis_exporter:latest
+    container_name: redis-exporter
+    restart: always
+    environment:
+      - REDIS_ADDR=redis:6379
+    ports:
+      - "9121:9121"
+    networks:
+      - tokenhub_network
+    depends_on:
+      - redis
+
+  # Nginx Exporter
+  nginx-exporter:
+    image: nginx/nginx-prometheus-exporter:latest
+    container_name: nginx-exporter
+    restart: always
+    command:
+      - '-nginx.scrape-uri=http://nginx:80/stub_status'
+    ports:
+      - "9113:9113"
+    networks:
+      - tokenhub_network
+    depends_on:
+      - nginx
+
+volumes:
+  prometheus_data:
+  grafana_data:
+  alertmanager_data:
+
+networks:
+  tokenhub_network:
+    external: true

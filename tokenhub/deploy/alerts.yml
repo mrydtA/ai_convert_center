@@ -1,0 +1,83 @@
+# 告警规则配置
+groups:
+  - name: tokenhub_alerts
+    rules:
+      # 服务宕机告警
+      - alert: ServiceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "服务 {{ $labels.job }} 已宕机"
+          description: "{{ $labels.instance }} 的服务已经停止运行超过 1 分钟"
+
+      # 高延迟告警
+      - alert: HighLatency
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "API 响应延迟过高"
+          description: "95% 的请求响应时间超过 500ms，当前值：{{ $value }}s"
+
+      # 高错误率告警
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "API 错误率过高"
+          description: "5xx 错误率超过 5%，当前值：{{ $value | humanizePercentage }}"
+
+      # MySQL 连接池耗尽
+      - alert: MySQLConnectionPoolExhausted
+        expr: mysql_global_status_threads_connected / mysql_global_variables_max_connections > 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "MySQL 连接池使用率过高"
+          description: "MySQL 连接池使用率超过 90%，当前值：{{ $value | humanizePercentage }}"
+
+      # Redis 内存使用过高
+      - alert: RedisHighMemoryUsage
+        expr: redis_memory_used_bytes / redis_memory_max_bytes > 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Redis 内存使用率过高"
+          description: "Redis 内存使用率超过 90%，当前值：{{ $value | humanizePercentage }}"
+
+      # 磁盘空间不足
+      - alert: DiskSpaceLow
+        expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) * 100 < 10
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "磁盘空间不足"
+          description: "{{ $labels.mountpoint }} 分区可用空间低于 10%，当前值：{{ $value | humanize }}%"
+
+      # New API 实例数减少
+      - alert: NewAPIInstancesReduced
+        expr: count(up{job="new-api"} == 1) < 1
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "New API 实例数减少"
+          description: "New API 可用实例数少于预期，当前值：{{ $value }}"
+
+      # 支付失败率过高
+      - alert: PaymentFailureRateHigh
+        expr: rate(payment_transactions_total{status="failed"}[5m]) / rate(payment_transactions_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "支付失败率过高"
+          description: "支付失败率超过 10%，当前值：{{ $value | humanizePercentage }}"

@@ -1,0 +1,152 @@
+{
+  "dashboard": {
+    "title": "TokenHub 监控面板",
+    "tags": ["tokenhub", "api", "payment"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "实时请求量 (QPS)",
+        "type": "graph",
+        "gridPos": {"x": 0, "y": 0, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "rate(http_requests_total[1m])",
+            "legendFormat": "{{job}} - {{instance}}"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "API 响应延迟 (P95)",
+        "type": "graph",
+        "gridPos": {"x": 12, "y": 0, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))",
+            "legendFormat": "P95 Latency"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "错误率",
+        "type": "graph",
+        "gridPos": {"x": 0, "y": 8, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "rate(http_requests_total{status=~\"5..\"}[5m]) / rate(http_requests_total[5m]) * 100",
+            "legendFormat": "5xx Error Rate %"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Token 消耗统计",
+        "type": "stat",
+        "gridPos": {"x": 12, "y": 8, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "sum(token_usage_total)",
+            "legendFormat": "Total Tokens"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "MySQL 连接池使用率",
+        "type": "gauge",
+        "gridPos": {"x": 0, "y": 16, "w": 8, "h": 8},
+        "targets": [
+          {
+            "expr": "mysql_global_status_threads_connected / mysql_global_variables_max_connections * 100",
+            "legendFormat": "Connection Pool Usage %"
+          }
+        ],
+        "options": {
+          "thresholds": [
+            {"value": 0, "color": "green"},
+            {"value": 70, "color": "yellow"},
+            {"value": 90, "color": "red"}
+          ]
+        }
+      },
+      {
+        "id": 6,
+        "title": "Redis 内存使用率",
+        "type": "gauge",
+        "gridPos": {"x": 8, "y": 16, "w": 8, "h": 8},
+        "targets": [
+          {
+            "expr": "redis_memory_used_bytes / redis_memory_max_bytes * 100",
+            "legendFormat": "Memory Usage %"
+          }
+        ],
+        "options": {
+          "thresholds": [
+            {"value": 0, "color": "green"},
+            {"value": 70, "color": "yellow"},
+            {"value": 90, "color": "red"}
+          ]
+        }
+      },
+      {
+        "id": 7,
+        "title": "磁盘使用率",
+        "type": "gauge",
+        "gridPos": {"x": 16, "y": 16, "w": 8, "h": 8},
+        "targets": [
+          {
+            "expr": "(1 - (node_filesystem_avail_bytes / node_filesystem_size_bytes)) * 100",
+            "legendFormat": "{{mountpoint}}"
+          }
+        ],
+        "options": {
+          "thresholds": [
+            {"value": 0, "color": "green"},
+            {"value": 70, "color": "yellow"},
+            {"value": 90, "color": "red"}
+          ]
+        }
+      },
+      {
+        "id": 8,
+        "title": "支付交易统计",
+        "type": "table",
+        "gridPos": {"x": 0, "y": 24, "w": 24, "h": 8},
+        "targets": [
+          {
+            "expr": "sum(rate(payment_transactions_total[1h])) by (status, payment_method)",
+            "legendFormat": "{{status}} - {{payment_method}}"
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "title": "系统资源 - CPU 使用率",
+        "type": "graph",
+        "gridPos": {"x": 0, "y": 32, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "100 - (avg by(instance) (irate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
+            "legendFormat": "CPU {{instance}}"
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "title": "系统资源 - 内存使用率",
+        "type": "graph",
+        "gridPos": {"x": 12, "y": 32, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100",
+            "legendFormat": "Memory {{instance}}"
+          }
+        ]
+      }
+    ],
+    "refresh": "5s",
+    "version": 1
+  }
+}

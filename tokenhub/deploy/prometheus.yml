@@ -1,0 +1,31 @@
+# Prometheus 配置文件
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  # New API 服务监控
+  - job_name: 'new-api'
+    static_configs:
+      - targets: ['newapi:8080']
+    metrics_path: '/metrics'
+    
+  # MySQL 监控
+  - job_name: 'mysql'
+    static_configs:
+      - targets: ['mysqld-exporter:9104']
+      
+  # Redis 监控
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+      
+  # Nginx 监控
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['nginx-exporter:9113']
+      
+  # Node Exporter (系统资源)
+  - job_name: 'node'
+    static_configs:
+      - targets: ['node-exporter:9100']
