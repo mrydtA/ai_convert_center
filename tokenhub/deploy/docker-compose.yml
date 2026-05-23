@@ -11,7 +11,7 @@ services:
     environment:
       - TZ=Asia/Shanghai
       - SQL_DSN=${MYSQL_USER}:${MYSQL_PASSWORD}@tcp(mysql:3306)/${MYSQL_DATABASE}?charset=utf8mb4&parseTime=True&loc=Local
-      - REDIS_CONN_STRING=${REDIS_PASSWORD}@redis:6379/0
+      - REDIS_CONN_STRING=redis://:${REDIS_PASSWORD}@redis:6379/0
       - SESSION_SECRET=${SESSION_SECRET}
       - CRYPTO_SECRET=${CRYPTO_SECRET}
       - ERROR_LOG_ENABLED=true
