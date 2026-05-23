@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>帮助中心 - TokenHub AI Token 中转站</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        .help-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .help-header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            color: white;
+        }
+
+        .help-header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+        }
+
+        .help-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-box {
+            max-width: 600px;
+            margin: 40px auto 0;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 18px 25px;
+            padding-right: 60px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .search-box button {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 45px;
+            height: 45px;
+            border: none;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-box button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        /* 分类网格 */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 15px;
+            padding: 35px 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .category-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+            border-color: var(--primary-color);
+        }
+
+        .category-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .category-card:nth-child(2) .category-icon {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .category-card:nth-child(3) .category-icon {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .category-card:nth-child(4) .category-icon {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .category-card:nth-child(5) .category-icon {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .category-card:nth-child(6) .category-icon {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        }
+
+        .category-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+
+        .category-desc {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* FAQ 部分 */
+        .faq-section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .faq-list {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.06);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .faq-question {
+            padding: 25px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .faq-question h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin: 0;
+        }
+
+        .faq-toggle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item.active .faq-toggle {
+            background: var(--primary-color);
+            color: white;
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+        }
+
+        .faq-answer-content {
+            padding: 0 30px 25px;
+            color: #475569;
+            line-height: 1.8;
+        }
+
+        .faq-answer-content p {
+            margin: 15px 0;
+        }
+
+        .faq-answer-content ul {
+            margin: 15px 0;
+            padding-left: 25px;
+        }
+
+        .faq-answer-content li {
+            margin: 8px 0;
+        }
+
+        .faq-answer-content code {
+            background: #f1f5f9;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #e11d48;
+        }
+
+        .faq-answer-content pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .faq-answer-content pre code {
+            background: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        /* 联系支持 */
+        .contact-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 60px 40px;
+            text-align: center;
+            color: white;
+        }
+
+        .contact-section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+        }
+
+        .contact-section p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact-methods {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .contact-method {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 25px 35px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .contact-method:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-5px);
+        }
+
+        .contact-method-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .contact-method-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .contact-method-desc {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            .help-header h1 {
+                font-size: 2rem;
+            }
+
+            .help-header p {
+                font-size: 1rem;
+            }
+
+            .search-box input {
+                padding: 15px 20px;
+                padding-right: 55px;
+                font-size: 1rem;
+            }
+
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-methods {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="../home/index.html" class="nav-logo">
+                <span class="logo-icon">🚀</span>
+                <span class="logo-text">TokenHub</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="../home/index.html">首页</a></li>
+                <li><a href="../plans/index.html">套餐</a></li>
+                <li><a href="../topup/index.html">充值</a></li>
+                <li><a href="../docs/index.html">文档</a></li>
+                <li><a href="../reports/index.html">财务报表</a></li>
+                <li><a href="index.html" class="active">帮助</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="btn btn-outline">登录</button>
+                <button class="btn btn-primary">注册</button>
+            </div>
+            <button class="nav-toggle">☰</button>
+        </div>
+    </nav>
+
+    <!-- 帮助中心内容 -->
+    <div class="help-container">
+        <div class="help-header">
+            <h1>💡 帮助中心</h1>
+            <p>查找答案、学习指南，让使用 TokenHub 更简单</p>
+            <div class="search-box">
+                <input type="text" placeholder="搜索问题，例如：如何充值？API 密钥在哪里获取？">
+                <button>🔍</button>
+            </div>
+        </div>
+
+        <!-- 分类卡片 -->
+        <div class="categories-grid">
+            <div class="category-card">
+                <div class="category-icon">🚀</div>
+                <h3 class="category-title">快速入门</h3>
+                <p class="category-desc">新手指南，快速了解如何使用 TokenHub 进行 API 调用和充值</p>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">💳</div>
+                <h3 class="category-title">充值与支付</h3>
+                <p class="category-desc">了解充值流程、支付方式、发票申请等财务相关问题</p>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">🔑</div>
+                <h3 class="category-title">API 使用</h3>
+                <p class="category-desc">API 密钥管理、接口调用、错误处理等技术文档</p>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">📦</div>
+                <h3 class="category-title">套餐与定价</h3>
+                <p class="category-desc">了解各档位套餐的区别、升级降级策略和优惠政策</p>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">⚙️</div>
+                <h3 class="category-title">账户设置</h3>
+                <p class="category-desc">账户安全、密码修改、绑定邮箱等账户管理操作</p>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">❓</div>
+                <h3 class="category-title">常见问题</h3>
+                <p class="category-desc">汇集用户最常问的问题，快速找到解决方案</p>
+            </div>
+        </div>
+
+        <!-- FAQ 部分 -->
+        <div class="faq-section">
+            <h2 class="section-title">常见问题 FAQ</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>如何开始使用 TokenHub？</h3>
+                        <div class="faq-toggle">+</div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>开始使用 TokenHub 非常简单，只需以下几个步骤：</p>
+                            <ol>
+                                <li><strong>注册账户</strong>：访问我们的官网，点击"注册"按钮创建账户</li>
+                                <li><strong>充值余额</strong>：进入充值页面，选择适合的金额进行充值</li>
+                                <li><strong>获取 API Key</strong>：在控制面板中生成您的专属 API Key</li>
+                                <li><strong>开始调用</strong>：使用 API Key 调用我们的接口，享受优惠的 AI 服务</li>
+                            </ol>
+                            <p>详细教程请查看 <a href="../docs/index.html">API 文档中心</a></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>支持哪些支付方式？充值后多久到账？</h3>
+                        <div class="faq-toggle">+</div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>我们支持多种支付方式：</p>
+                            <ul>
+                                <li>✅ <strong>支付宝</strong> - 即时到账</li>
+                                <li>✅ <strong>微信支付</strong> - 即时到账</li>
+                                <li>✅ <strong>Payspi 聚合支付</strong> - 支持多种国际支付方式</li>
+                                <li>✅ <strong>人工转账</strong> - 适合大额充值，需人工确认</li>
+                            </ul>
+                            <p>在线支付通常是<strong>即时到账</strong>的，充值完成后余额会立即更新。如果遇到延迟，请检查支付状态或联系客服。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>API Key 如何获取和管理？</h3>
+                        <div class="faq-toggle">+</div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>获取 API Key 的步骤：</p>
+                            <ol>
+                                <li>登录您的 TokenHub 账户</li>
+                                <li>进入"控制面板" > "API 密钥管理"</li>
+                                <li>点击"创建新密钥"按钮</li>
+                                <li>为密钥命名（如：生产环境、测试环境）</li>
+                                <li>复制并安全保存您的 API Key（只显示一次）</li>
+                            </ol>
+                            <p><strong>安全提示：</strong></p>
+                            <ul>
+                                <li>不要将 API Key 提交到代码仓库</li>
+                                <li>建议使用环境变量存储</li>
+                                <li>定期轮换密钥以提高安全性</li>
+                                <li>如发现泄露，立即删除并重新生成</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>TokenHub 的价格优势是什么？</h3>
+                        <div class="faq-toggle">+</div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>相比官方 API，TokenHub 提供显著的价格优惠：</p>
+                            <ul>
+                                <li>🎯 <strong>GPT-4</strong>：比官方便宜 30-50%</li>
+                                <li>🎯 <strong>Claude 系列</strong>：优惠 25-40%</li>
+                                <li>🎯 <strong>Gemini Pro</strong>：低至官方价格的 60%</li>
+                                <li>🎯 <strong>批量折扣</strong>：大额充值额外享受 5-15% 优惠</li>
+                            </ul>
+                            <p>我们通过批量采购和优化资源分配，将成本节约传递给用户。查看 <a href="../plans/index.html">套餐页面</a> 了解更多详情。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>如何申请发票？</h3>
+                        <div class="faq-toggle">+</div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>发票申请流程：</p>
+                            <ol>
+                                <li>登录账户，进入"财务管理" > "发票申请"</li>
+                                <li>选择需要开票的充值记录</li>
+                                <li>填写发票抬头和税号信息</li>
+                                <li>选择发票类型（电子发票/纸质发票）</li>
+                                <li>提交申请，我们将在 3-5 个工作日内处理</li>
+                            </ol>
+                            <p><strong>注意事项：</strong></p>
+                            <ul>
+                                <li>单张发票最低金额：¥100</li>
+                                <li>电子发票发送至注册邮箱</li>
+                                <li>纸质发票包邮寄送到填写地址</li>
+                                <li>如有疑问请联系客服</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>遇到 API 调用错误怎么办？</h3>
+                        <div class="faq-toggle">+</div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>常见错误及解决方案：</p>
+                            <ul>
+                                <li><code>401 Unauthorized</code> - API Key 无效或过期，请检查密钥是否正确</li>
+                                <li><code>429 Too Many Requests</code> - 请求频率超限，请降低调用频率或升级套餐</li>
+                                <li><code>500 Internal Server Error</code> - 服务器内部错误，请稍后重试或联系客服</li>
+                                <li><code>402 Payment Required</code> - 余额不足，请及时充值</li>
+                            </ul>
+                            <p>完整错误码列表请参考 <a href="../docs/index.html">API 文档 - 错误码</a> 章节。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>可以退款吗？退款政策是什么？</h3>
+                        <div class="faq-toggle">+</div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>我们的退款政策：</p>
+                            <ul>
+                                <li>✅ <strong>未使用余额</strong>：可随时申请全额退款</li>
+                                <li>✅ <strong>7 天内</strong>：扣除已使用部分，剩余金额可退</li>
+                                <li>❌ <strong>超过 7 天</strong>：原则上不支持退款，特殊情况请联系客服</li>
+                                <li>❌ <strong>赠送金额</strong>：活动赠送的余额不可退款</li>
+                            </ul>
+                            <p>退款申请路径：控制面板 > 财务管理 > 申请退款</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 联系支持 -->
+        <div class="contact-section">
+            <h2>还没找到答案？</h2>
+            <p>我们的支持团队随时为您服务，平均响应时间 < 2 小时</p>
+            <div class="contact-methods">
+                <div class="contact-method">
+                    <div class="contact-method-icon">📧</div>
+                    <div class="contact-method-title">电子邮件</div>
+                    <div class="contact-method-desc">support@tokenhub.com</div>
+                </div>
+                <div class="contact-method">
+                    <div class="contact-method-icon">💬</div>
+                    <div class="contact-method-title">在线客服</div>
+                    <div class="contact-method-desc">工作日 9:00-18:00</div>
+                </div>
+                <div class="contact-method">
+                    <div class="contact-method-icon">📱</div>
+                    <div class="contact-method-title">微信客服</div>
+                    <div class="contact-method-desc">TokenHub_Support</div>
+                </div>
+                <div class="contact-method">
+                    <div class="contact-method-icon">🐦</div>
+                    <div class="contact-method-title">GitHub Issues</div>
+                    <div class="contact-method-desc">技术问题反馈</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h4>TokenHub</h4>
+                    <p>专业的 AI Token 中转服务平台，让 AI 使用更简单、更经济。</p>
+                </div>
+                <div class="footer-section">
+                    <h4>产品</h4>
+                    <ul>
+                        <li><a href="../plans/index.html">价格方案</a></li>
+                        <li><a href="../topup/index.html">在线充值</a></li>
+                        <li><a href="../docs/index.html">API 文档</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>支持</h4>
+                    <ul>
+                        <li><a href="index.html">帮助中心</a></li>
+                        <li><a href="mailto:support@tokenhub.com">联系我们</a></li>
+                        <li><a href="#">服务条款</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>关注我们</h4>
+                    <div class="social-links">
+                        <a href="#">微信</a>
+                        <a href="#">微博</a>
+                        <a href="#">GitHub</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TokenHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../assets/js/main.js"></script>
+    <script>
+        // FAQ 展开/收起
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                const item = this.parentElement;
+                const isActive = item.classList.contains('active');
+                
+                // 关闭所有其他项
+                document.querySelectorAll('.faq-item').forEach(i => {
+                    i.classList.remove('active');
+                });
+                
+                // 如果之前不是激活状态，则打开当前项
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // 搜索功能
+        const searchInput = document.querySelector('.search-box input');
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const query = this.value.trim();
+                if (query) {
+                    // 实际项目中这里会执行搜索逻辑
+                    alert(`搜索：${query}\n（搜索功能待实现）`);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

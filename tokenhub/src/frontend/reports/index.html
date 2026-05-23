@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>财务报表 - TokenHub AI Token 中转站</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        .reports-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .reports-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .reports-header h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .reports-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        /* 统计卡片 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--primary-color);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card.revenue { border-left-color: #10b981; }
+        .stat-card.orders { border-left-color: #3b82f6; }
+        .stat-card.users { border-left-color: #8b5cf6; }
+        .stat-card.tokens { border-left-color: #f59e0b; }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .stat-card.revenue .stat-icon { background: #d1fae5; color: #10b981; }
+        .stat-card.orders .stat-icon { background: #dbeafe; color: #3b82f6; }
+        .stat-card.users .stat-icon { background: #ede9fe; color: #8b5cf6; }
+        .stat-card.tokens .stat-icon { background: #fef3c7; color: #f59e0b; }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1a1a1a;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .stat-change {
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+
+        .stat-change.positive { color: #10b981; }
+        .stat-change.negative { color: #ef4444; }
+
+        /* 图表区域 */
+        .charts-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .chart-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .chart-filter {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chart-filter button {
+            padding: 8px 16px;
+            border: 1px solid #e5e7eb;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chart-filter button.active,
+        .chart-filter button:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .chart-placeholder {
+            height: 300px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        /* 数据表格 */
+        .table-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .table-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .table-actions input {
+            padding: 10px 15px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        .table-actions button {
+            padding: 10px 20px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .table-actions button:hover {
+            background: var(--primary-dark);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table thead {
+            background: #f8fafc;
+        }
+
+        .data-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #475569;
+            font-size: 0.9rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .data-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #334155;
+        }
+
+        .data-table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-badge.success {
+            background: #d1fae5;
+            color: #10b981;
+        }
+
+        .status-badge.pending {
+            background: #fef3c7;
+            color: #f59e0b;
+        }
+
+        .status-badge.failed {
+            background: #fee2e2;
+            color: #ef4444;
+        }
+
+        .amount-positive {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .amount-negative {
+            color: #ef4444;
+            font-weight: 600;
+        }
+
+        /* 分页 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .pagination button {
+            padding: 10px 15px;
+            border: 1px solid #e5e7eb;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination button:hover:not(:disabled) {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pagination button.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .pagination span {
+            color: #666;
+        }
+
+        /* 导出按钮 */
+        .export-btn {
+            background: #10b981 !important;
+        }
+
+        .export-btn:hover {
+            background: #059669 !important;
+        }
+
+        @media (max-width: 768px) {
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+
+            .table-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .table-actions {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .data-table {
+                font-size: 0.85rem;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 10px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="../home/index.html" class="nav-logo">
+                <span class="logo-icon">🚀</span>
+                <span class="logo-text">TokenHub</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="../home/index.html">首页</a></li>
+                <li><a href="../plans/index.html">套餐</a></li>
+                <li><a href="../topup/index.html">充值</a></li>
+                <li><a href="../docs/index.html">文档</a></li>
+                <li><a href="index.html" class="active">财务报表</a></li>
+                <li><a href="../help/index.html">帮助</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="btn btn-outline">登录</button>
+                <button class="btn btn-primary">注册</button>
+            </div>
+            <button class="nav-toggle">☰</button>
+        </div>
+    </nav>
+
+    <!-- 财务报表内容 -->
+    <div class="reports-container">
+        <div class="reports-header">
+            <h1>📊 财务报表</h1>
+            <p>实时掌握平台营收数据和业务增长情况</p>
+        </div>
+
+        <!-- 统计卡片 -->
+        <div class="stats-grid">
+            <div class="stat-card revenue">
+                <div class="stat-icon">💰</div>
+                <div class="stat-value">¥128,450</div>
+                <div class="stat-label">总营收</div>
+                <div class="stat-change positive">↑ 23.5% 较上月</div>
+            </div>
+            <div class="stat-card orders">
+                <div class="stat-icon">📦</div>
+                <div class="stat-value">1,247</div>
+                <div class="stat-label">订单总数</div>
+                <div class="stat-change positive">↑ 18.2% 较上月</div>
+            </div>
+            <div class="stat-card users">
+                <div class="stat-icon">👥</div>
+                <div class="stat-value">856</div>
+                <div class="stat-label">活跃用户</div>
+                <div class="stat-change positive">↑ 31.7% 较上月</div>
+            </div>
+            <div class="stat-card tokens">
+                <div class="stat-icon">🪙</div>
+                <div class="stat-value">2.5M</div>
+                <div class="stat-label">Token 消耗量</div>
+                <div class="stat-change positive">↑ 42.3% 较上月</div>
+            </div>
+        </div>
+
+        <!-- 图表区域 -->
+        <div class="charts-section">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">营收趋势</h3>
+                    <div class="chart-filter">
+                        <button class="active">7 天</button>
+                        <button>30 天</button>
+                        <button>90 天</button>
+                    </div>
+                </div>
+                <div class="chart-placeholder">
+                    📈 营收趋势图表区域 (集成 Chart.js 或 ECharts)
+                </div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">支付方式分布</h3>
+                    <div class="chart-filter">
+                        <button class="active">本月</button>
+                        <button>本季</button>
+                        <button>全年</button>
+                    </div>
+                </div>
+                <div class="chart-placeholder">
+                    🥧 支付方式饼图区域 (集成 Chart.js 或 ECharts)
+                </div>
+            </div>
+        </div>
+
+        <!-- 订单明细表格 -->
+        <div class="table-section">
+            <div class="table-header">
+                <h3 class="table-title">最近订单明细</h3>
+                <div class="table-actions">
+                    <input type="text" placeholder="搜索订单号/用户...">
+                    <button>查询</button>
+                    <button class="export-btn">导出 Excel</button>
+                </div>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>订单号</th>
+                        <th>用户</th>
+                        <th>金额</th>
+                        <th>支付方式</th>
+                        <th>状态</th>
+                        <th>时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>TP1735891234567</td>
+                        <td>user***@gmail.com</td>
+                        <td class="amount-positive">+¥500.00</td>
+                        <td>支付宝</td>
+                        <td><span class="status-badge success">已完成</span></td>
+                        <td>2024-01-03 14:23</td>
+                    </tr>
+                    <tr>
+                        <td>TP1735891234566</td>
+                        <td>zhang***@163.com</td>
+                        <td class="amount-positive">+¥200.00</td>
+                        <td>微信支付</td>
+                        <td><span class="status-badge success">已完成</span></td>
+                        <td>2024-01-03 13:45</td>
+                    </tr>
+                    <tr>
+                        <td>TP1735891234565</td>
+                        <td>li***@qq.com</td>
+                        <td class="amount-positive">+¥1000.00</td>
+                        <td>Payspi</td>
+                        <td><span class="status-badge pending">处理中</span></td>
+                        <td>2024-01-03 12:30</td>
+                    </tr>
+                    <tr>
+                        <td>TP1735891234564</td>
+                        <td>wang***@outlook.com</td>
+                        <td class="amount-positive">+¥100.00</td>
+                        <td>支付宝</td>
+                        <td><span class="status-badge success">已完成</span></td>
+                        <td>2024-01-03 11:15</td>
+                    </tr>
+                    <tr>
+                        <td>TP1735891234563</td>
+                        <td>chen***@gmail.com</td>
+                        <td class="amount-negative">-¥50.00</td>
+                        <td>退款</td>
+                        <td><span class="status-badge failed">已退款</span></td>
+                        <td>2024-01-03 10:20</td>
+                    </tr>
+                    <tr>
+                        <td>TP1735891234562</td>
+                        <td>liu***@163.com</td>
+                        <td class="amount-positive">+¥300.00</td>
+                        <td>微信支付</td>
+                        <td><span class="status-badge success">已完成</span></td>
+                        <td>2024-01-03 09:45</td>
+                    </tr>
+                    <tr>
+                        <td>TP1735891234561</td>
+                        <td>zhao***@qq.com</td>
+                        <td class="amount-positive">+¥800.00</td>
+                        <td>支付宝</td>
+                        <td><span class="status-badge success">已完成</span></td>
+                        <td>2024-01-03 08:30</td>
+                    </tr>
+                    <tr>
+                        <td>TP1735891234560</td>
+                        <td>huang***@gmail.com</td>
+                        <td class="amount-positive">+¥150.00</td>
+                        <td>Payspi</td>
+                        <td><span class="status-badge pending">处理中</span></td>
+                        <td>2024-01-03 07:15</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="pagination">
+                <button disabled>← 上一页</button>
+                <button class="active">1</button>
+                <button>2</button>
+                <button>3</button>
+                <button>4</button>
+                <button>5</button>
+                <span>...</span>
+                <button>下一页 →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h4>TokenHub</h4>
+                    <p>专业的 AI Token 中转服务平台，让 AI 使用更简单、更经济。</p>
+                </div>
+                <div class="footer-section">
+                    <h4>产品</h4>
+                    <ul>
+                        <li><a href="../plans/index.html">价格方案</a></li>
+                        <li><a href="../topup/index.html">在线充值</a></li>
+                        <li><a href="../docs/index.html">API 文档</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>支持</h4>
+                    <ul>
+                        <li><a href="../help/index.html">帮助中心</a></li>
+                        <li><a href="mailto:support@tokenhub.com">联系我们</a></li>
+                        <li><a href="#">服务条款</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>关注我们</h4>
+                    <div class="social-links">
+                        <a href="#">微信</a>
+                        <a href="#">微博</a>
+                        <a href="#">GitHub</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TokenHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../assets/js/main.js"></script>
+    <script>
+        // 图表过滤器交互
+        document.querySelectorAll('.chart-filter button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // 模拟数据更新
+        function updateStats() {
+            // 实际项目中这里会调用 API 获取最新数据
+            console.log('统计数据已更新');
+        }
+
+        // 页面加载时更新数据
+        window.addEventListener('load', updateStats);
+    </script>
+</body>
+</html>

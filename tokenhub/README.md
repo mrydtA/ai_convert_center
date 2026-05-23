@@ -70,6 +70,12 @@ TokenHub 是一个**商业级 AI Token 中转站平台**，基于开源 New API 
 | `payment/gateway.go` | 🆕 | 支付网关 Go 代码框架 |
 | `frontend/topup/index.html` | 🆕 | 响应式充值页面（扫码支付、订单轮询） |
 | `frontend/plans/index.html` | 🆕 | 套餐购买页面（4 档套餐、支付弹窗） |
+| `frontend/home/index.html` | 🆕 | 品牌首页/落地页（功能展示、价格方案） |
+| `frontend/docs/index.html` | 🆕 | API 文档中心（侧边栏导航、代码示例） |
+| `frontend/reports/index.html` | 🆕 | 财务报表页面（统计卡片、数据表格） |
+| `frontend/help/index.html` | 🆕 | 帮助中心页面（FAQ、分类指南） |
+| `frontend/assets/css/style.css` | 🆕 | 全局样式系统（品牌主题色） |
+| `frontend/assets/js/main.js` | 🆕 | 公共 JavaScript 功能 |
 
 ### 3. 文档（docs/）
 
@@ -164,14 +170,14 @@ docker-compose ps
 - [ ] 实现支付回调处理
 - [ ] 订单管理功能
 
-### 阶段四：UI 定制与增强（第 6-7 周）🛠️
+### 阶段四：UI 定制与增强（第 6-7 周）✅
 
-- [ ] Logo 更换与品牌定制
-- [ ] 主题色定制
-- [ ] 首页落地页开发
-- [ ] 帮助文档页面
-- [ ] 财务报表页面
-- [ ] 邮件通知功能
+- [x] Logo 更换与品牌定制
+- [x] 主题色定制
+- [x] 首页落地页开发
+- [x] 帮助文档页面
+- [x] 财务报表页面
+- [ ] 邮件通知功能（后端功能）
 
 ### 阶段五：测试优化与上线（第 8-10 周）
 
